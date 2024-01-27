@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interest Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #calculator-container {
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #c40000;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #000000;
+    }
+
+    input {
+      margin-bottom: 15px;
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 10px;
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    #calculateMonths {
+      background-color: #047200; /* Red background color */
+      margin-bottom: 10px;
+    }
+
+    #calculateSimpleInterest {
+      background-color: #005e9d; /* Blue background color */
+      margin-bottom: 10px;
+    }
+
+    #calculateCompoundInterest {
+      background-color: #9600a9; /* Blue background color */
+    }
+
+    #result {
+      margin-top: 20px;
+      color: #000000;
+    }
+
+    #pageFooter {
+      margin-top: 30px;
+      text-align: center;
+      color: #333333;
+    }
+
+    #printButton {
+      background-color: #378385;
+      color: #ffffff;
+      padding: 8px; /* Adjusted padding for smaller size */
+      margin-top: 10px;
+      cursor: pointer;
+      font-size: 14px; /* Adjusted text size */
+    }
+  </style>
+</head>
+<body>
+  <div id="calculator-container">
+    <h1>INTEREST CALCULATOR</h1>
+
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" required>
+
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" required>
+
+    <button id="calculateMonths" onclick="calculateMonths()">Calculate Months Completed</button>
+
+    <div id="monthsResult"></div>
+
+    <div id="interestInput" style="display: none;">
+      <label for="principal">Principal Amount:</label>
+      <input type="number" id="principal" required>
+
+      <label for="rate">Interest Rate (%):</label>
+      <input type="number" id="rate" required>
+
+      <label for="timeInMonths">Total Months Completed:</label>
+      <input type="number" id="timeInMonths" required>
+
+      <button id="calculateSimpleInterest" onclick="calculateSimpleInterest()">Calculate Simple Interest</button>
+      <button id="calculateCompoundInterest" onclick="calculateCompoundInterest()">Calculate Compound Interest</button>
+
+      <div id="result"></div>
+
+      <button id="printButton" onclick="printPage()">Print</button>
+    </div>
+
+    <div id="pageFooter">
+      <p id="calculatedDate"></p>
+      <p>Page is created by Prashanth Kumar Suddala</p>
+    </div>
+  </div>
+
+  <script>
+    function calculateMonthsCompleted(startDate, endDate) {
+      var years = endDate.getFullYear() - startDate.getFullYear();
+      var months = endDate.getMonth() - startDate.getMonth();
+      var days = endDate.getDate() - startDate.getDate();
+
+      if (days < 0) {
+        months--;
+        var lastMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
+        days += lastMonth.getDate();
+      }
+
+      var totalMonths = years * 12 + months;
+
+      document.getElementById('timeInMonths').value = totalMonths;
+
+      var monthsResultDiv = document.getElementById('monthsResult');
+      monthsResultDiv.innerHTML = `<p>Years: ${years}, Months: ${months}, and Days: ${days}</p>`;
+
+      // Display calculated date and time
+      var currentDate = new Date();
+      document.getElementById('calculatedDate').innerHTML = `Calculation Date and Time: ${formatDate(currentDate)}`;
+
+      // Show the interest input section
+      document.getElementById('interestInput').style.display = 'block';
+    }
+
+    function calculateMonths() {
+      var startDate = new Date(document.getElementById('startDate').value);
+      var endDate = new Date(document.getElementById('endDate').value);
+
+      calculateMonthsCompleted(startDate, endDate);
+    }
+
+    function calculateSimpleInterest() {
+      var principal = parseFloat(document.getElementById('principal').value);
+      var rate = parseFloat(document.getElementById('rate').value);
+      var timeInMonths = parseFloat(document.getElementById('timeInMonths').value);
+
+      var simpleInterest = (principal * rate * timeInMonths) / 100;
+      var totalAmount = principal + simpleInterest;
+
+      displayResult(simpleInterest, totalAmount);
+    }
+
+    function calculateCompoundInterest() {
+      var principal = parseFloat(document.getElementById('principal').value);
+      var rate = parseFloat(document.getElementById('rate').value);
+      var timeInMonths = parseFloat(document.getElementById('timeInMonths').value);
+
+      var compoundInterest = principal * Math.pow((1 + rate / 100), timeInMonths) - principal;
+      var totalAmount = principal + compoundInterest;
+
+      displayResult(compoundInterest, totalAmount);
+    }
+
+    function displayResult(interest, totalAmount) {
+      var resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = `<p>Interest: ${interest.toFixed(2)}</p>`;
+
+      var currentDate = new Date();
+      var maturityDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + parseInt(document.getElementById('timeInMonths').value), currentDate.getDate());
+
+      resultDiv.innerHTML += `<p>Total Amount: ${totalAmount.toFixed(2)}</p>`;
+      
+    }
+
+    function formatDate(date) {
+      var day = date.getDate();
+      var month = date.getMonth() + 1;
+      var year = date.getFullYear();
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var seconds = date.getSeconds();
+
+      return `${padZero(day)}/${padZero(month)}/${year} ${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+    }
+
+    function padZero(number) {
+      return number < 10 ? `0${number}` : number;
+    }
+
+    function printPage() {
+      window.print();
+    }
+  </script>
+</body>
+</html>
