@@ -67,7 +67,7 @@
 
     #result {
       margin-top: 20px;
-      color: #000000;
+      color: #cd0000;
     }
 
     #pageFooter {
@@ -182,12 +182,12 @@
 
     function displayResult(interest, totalAmount) {
       var resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = `<p>Interest: ${interest.toFixed(2)}</p>`;
+      resultDiv.innerHTML = `<p><b>Interest: ${interest.toFixed(2)}</b></p>`;
 
       var currentDate = new Date();
       var maturityDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + parseInt(document.getElementById('timeInMonths').value), currentDate.getDate());
 
-      resultDiv.innerHTML += `<p>Total Amount with Interest: ${totalAmount.toFixed(2)}</p>`;
+      resultDiv.innerHTML += `<p><b>Total Amount with Interest: ${totalAmount.toFixed(2)}</b></p>`;
       
     }
 
