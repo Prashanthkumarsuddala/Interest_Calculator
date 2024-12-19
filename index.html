@@ -15,7 +15,6 @@
       height: 100vh;
       margin: 0;
     }
-
     #calculator-container {
       background-color: #ffffff;
       border-radius: 15px;
@@ -25,21 +24,18 @@
       width: 100%;
       text-align: center;
     }
-
     h1 {
-      color: #FF0000; /* Red color for title */
-      font-size: 24px;
+      color: #FF0000;
+      font-size: 36px;
       margin-bottom: 20px;
       font-weight: bold;
     }
-
     label {
       display: block;
       margin-bottom: 8px;
       color: #333;
       font-weight: bold;
     }
-
     input {
       margin-bottom: 15px;
       padding: 12px;
@@ -50,7 +46,6 @@
       font-size: 16px;
       font-weight: bold;
     }
-
     button {
       padding: 12px;
       color: #ffffff;
@@ -59,33 +54,27 @@
       cursor: pointer;
       width: 100%;
       box-sizing: border-box;
-      font-size: 16px;
+      font-size: 20px;
       font-weight: bold;
       margin-bottom: 15px;
-      transition: background-color 0.3s, transform 0.2s; /* Add hover effects */
+      transition: background-color 0.3s, transform 0.2s;
     }
-
     #calculateMonths {
       background-color: #007BFF;
     }
-
     #calculateSimpleInterest {
       background-color: #28A745;
     }
-
     #calculateCompoundInterest {
       background-color: #17A2B8;
     }
-
     #printButton {
       background-color: #6C757D;
     }
-
     button:hover {
       opacity: 0.9;
-      transform: scale(1.05); /* Slightly enlarge on hover */
+      transform: scale(1.05);
     }
-
     #resultBox {
       margin-top: 20px;
       padding: 20px;
@@ -94,178 +83,142 @@
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
-
     #resultBox p {
       color: #D9534F;
       font-family: 'Roboto Slab', serif;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 20px;
     }
-
     #pageFooter {
       margin-top: 30px;
       text-align: center;
       color: #333;
     }
-
-    /* Responsive styling */
-    @media (max-width: 768px) {
-      #calculator-container {
-        padding: 20px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-
-      h1 {
-        font-size: 20px;
-      }
-
-      input, button {
-        padding: 10px;
-        font-size: 14px;
-      }
-
-      #printButton {
-        font-size: 14px;
-        padding: 10px;
-      }
+    .radio-group {
+      text-align: center;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      font-size: 14px;
     }
-
-    @media (max-width: 480px) {
-      #calculator-container {
-        padding: 15px;
-      }
-
-      h1 {
-        font-size: 18px;
-      }
-
-      input, button {
-        padding: 8px;
-        font-size: 12px;
-      }
-
-      #printButton {
-        font-size: 12px;
-        padding: 8px;
-      }
+    .radio-group input {
+      margin-right: 5px;
+      transform: scale(0.8);
+    }
+    .radio-group label {
+      display: inline-block;
+      vertical-align: middle;
+      font-weight: normal;
+      line-height: 1.5;
+      text-align: center;
+    }
+    #calculateSimpleInterest:disabled,
+    #calculateCompoundInterest:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
     }
   </style>
 </head>
 <body>
   <div id="calculator-container">
-    <h1> INTEREST CALCULATOR </h1>
-
-    <label for="startDate"> Enter Start Date</label>
+    <h1>INTEREST CALCULATOR</h1>
+    <label for="startDate">Enter Start Date</label>
     <input type="date" id="startDate" required>
-
     <label for="endDate">Enter End Date</label>
     <input type="date" id="endDate" required>
-
     <button id="calculateMonths" onclick="calculateMonths()">Calculate Months Completed</button>
-
     <div id="monthsResult"></div>
-
     <div id="interestInput" style="display: none;">
       <label for="principal">Principal Amount:</label>
       <input type="number" id="principal" required>
-
       <label for="rate">Interest Rate (%):</label>
       <input type="number" id="rate" required>
-
-      <label for="timeInMonths">Total Months Completed:</label>
-      <input type="number" id="timeInMonths" required>
-
-      <button id="calculateSimpleInterest" onclick="calculateSimpleInterest()">Calculate Simple Interest</button>
-      <button id="calculateCompoundInterest" onclick="calculateCompoundInterest()">Calculate Compound Interest</button>
-
+      <label for="timeInMonths">Total Time (Months):</label>
+      <input type="number" id="timeInMonths" required readonly>
+      <div class="radio-group">
+        <p>Include Days in Calculation?</p>
+        <input type="radio" id="includeDaysYes" name="includeDays" value="yes" required onclick="calculateMonths()">
+        <label for="includeDaysYes">Yes</label>
+        <input type="radio" id="includeDaysNo" name="includeDays" value="no" required onclick="calculateMonths()">
+        <label for="includeDaysNo">No</label>
+      </div>
+      <button id="calculateSimpleInterest" onclick="calculateSimpleInterest()" disabled>Calculate Simple Interest</button>
+      <button id="calculateCompoundInterest" onclick="calculateCompoundInterest()" disabled>Calculate Compound Interest</button>
       <div id="resultBox">
         <div id="result"></div>
       </div>
-
       <button id="printButton" onclick="printPage()">Print</button>
     </div>
-
     <div id="pageFooter">
       <p id="calculatedDate"></p>
-      <p>Page is created by Prashanth Kumar Suddala</p>
+      <p>Designed by Prashanth Kumar Suddala</p>
     </div>
   </div>
 
   <script>
-    function calculateMonthsCompleted(startDate, endDate) {
-      var years = endDate.getFullYear() - startDate.getFullYear();
-      var months = endDate.getMonth() - startDate.getMonth();
-      var days = endDate.getDate() - startDate.getDate();
-
+    function calculateMonths() {
+      const startDate = new Date(document.getElementById('startDate').value);
+      const endDate = new Date(document.getElementById('endDate').value);
+      if (endDate < startDate) {
+        alert("End Date must be after Start Date");
+        return;
+      }
+      let years = endDate.getFullYear() - startDate.getFullYear();
+      let months = endDate.getMonth() - startDate.getMonth();
+      let days = endDate.getDate() - startDate.getDate();
       if (days < 0) {
         months--;
-        var lastMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
+        const lastMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
         days += lastMonth.getDate();
       }
-
-      var totalMonths = years * 12 + months;
-
-      document.getElementById('timeInMonths').value = totalMonths;
-
-      var monthsResultDiv = document.getElementById('monthsResult');
-      monthsResultDiv.innerHTML = `<p>Years: ${years}, Months: ${months}, and Days: ${days}</p>`;
-
-      // Display calculated date and time
-      var currentDate = new Date();
-      document.getElementById('calculatedDate').innerHTML = `Calculation Date and Time: ${formatDate(currentDate)}`;
-
-      // Show the interest input section
+      let totalMonths = years * 12 + months;
+      const includeDays = document.querySelector('input[name="includeDays"]:checked');
+      if (includeDays && includeDays.value === "yes" && days > 0) {
+        totalMonths += days / 30; // Approximate conversion of days to months
+      }
+      document.getElementById('timeInMonths').value = totalMonths.toFixed(2);
+      document.getElementById('monthsResult').innerHTML = `<p>Years: ${years}, Months: ${months}, Days: ${days}</p><p>Total Time: ${totalMonths.toFixed(2)} months</p>`;
       document.getElementById('interestInput').style.display = 'block';
-    }
 
-    function calculateMonths() {
-      var startDate = new Date(document.getElementById('startDate').value);
-      var endDate = new Date(document.getElementById('endDate').value);
-
-      calculateMonthsCompleted(startDate, endDate);
+      // Enable buttons after calculation
+      document.getElementById('calculateSimpleInterest').disabled = false;
+      document.getElementById('calculateCompoundInterest').disabled = false;
     }
 
     function calculateSimpleInterest() {
-      var principal = parseFloat(document.getElementById('principal').value);
-      var rate = parseFloat(document.getElementById('rate').value);
-      var timeInMonths = parseFloat(document.getElementById('timeInMonths').value);
-
-      var simpleInterest = (principal * rate * timeInMonths) / 100;
-      var totalAmount = principal + simpleInterest;
-
-      displayResult(`Your simple interest: ${simpleInterest.toFixed(2)} Rupees`, totalAmount);
+      const principal = parseFloat(document.getElementById('principal').value);
+      const rate = parseFloat(document.getElementById('rate').value);
+      const time = parseFloat(document.getElementById('timeInMonths').value) / 12;
+      const includeDays = document.querySelector('input[name="includeDays"]:checked').value;
+      let simpleInterest = (principal * rate * time) / 100;
+      if (includeDays === "yes") {
+        const totalMonths = parseFloat(document.getElementById('timeInMonths').value);
+        const additionalDays = totalMonths % 1;
+        simpleInterest += principal * rate * (additionalDays / 12) / 100;
+      }
+      const totalAmount = principal + simpleInterest;
+      displayResult(`Your simple Interest: ${simpleInterest.toFixed(2)} Rupees`, totalAmount);
     }
 
     function calculateCompoundInterest() {
-      var principal = parseFloat(document.getElementById('principal').value);
-      var rate = parseFloat(document.getElementById('rate').value);
-      var timeInMonths = parseFloat(document.getElementById('timeInMonths').value);
-
-      var compoundInterest = principal * Math.pow((1 + rate / 100), timeInMonths) - principal;
-      var totalAmount = principal + compoundInterest;
-
+      const principal = parseFloat(document.getElementById('principal').value);
+      const rate = parseFloat(document.getElementById('rate').value) / 100;
+      const time = parseFloat(document.getElementById('timeInMonths').value) / 12;
+      const includeDays = document.querySelector('input[name="includeDays"]:checked').value;
+      let compoundInterest = principal * Math.pow(1 + rate, time) - principal;
+      if (includeDays === "yes") {
+        const totalMonths = parseFloat(document.getElementById('timeInMonths').value);
+        const additionalDays = totalMonths % 1;
+        compoundInterest *= Math.pow(1 + rate, additionalDays / 12);
+      }
+      const totalAmount = principal + compoundInterest;
       displayResult(`Your compound interest: ${compoundInterest.toFixed(2)} Rupees`, totalAmount);
     }
 
     function displayResult(interestMessage, totalAmount) {
-      var resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = `<p>${interestMessage}</p>`;
-      resultDiv.innerHTML += `<p>Total Amount with Interest: ${totalAmount.toFixed(2)} Rupees</p>`;
-    }
-
-    function formatDate(date) {
-      var day = date.getDate();
-      var month = date.getMonth() + 1;
-      var year = date.getFullYear();
-      var hours = date.getHours();
-      var minutes = date.getMinutes();
-      var seconds = date.getSeconds();
-
-      return `${padZero(day)}/${padZero(month)}/${year} ${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
-    }
-
-    function padZero(number) {
-      return number < 10 ? `0${number}` : number;
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = `<p>${interestMessage}</p><p>Total Amount with Interest: ${totalAmount.toFixed(2)} Rupees</p>`;
     }
 
     function printPage() {
