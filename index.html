@@ -189,7 +189,7 @@
     function calculateSimpleInterest() {
       const principal = parseFloat(document.getElementById('principal').value);
       const rate = parseFloat(document.getElementById('rate').value);
-      const time = parseFloat(document.getElementById('timeInMonths').value) / 12;
+      const time = parseFloat(document.getElementById('timeInMonths').value);
       const includeDays = document.querySelector('input[name="includeDays"]:checked').value;
       let simpleInterest = (principal * rate * time) / 100;
       if (includeDays === "yes") {
@@ -204,7 +204,7 @@
     function calculateCompoundInterest() {
       const principal = parseFloat(document.getElementById('principal').value);
       const rate = parseFloat(document.getElementById('rate').value) / 100;
-      const time = parseFloat(document.getElementById('timeInMonths').value) / 12;
+      const time = parseFloat(document.getElementById('timeInMonths').value);
       const includeDays = document.querySelector('input[name="includeDays"]:checked').value;
       let compoundInterest = principal * Math.pow(1 + rate, time) - principal;
       if (includeDays === "yes") {
